@@ -42,7 +42,7 @@
 
 class rtkdSplitPlane {
 public:
-    static const float zeroThreshold = 1e-5;
+    static constexpr float zeroThreshold = 1e-5f;
     int splitDirection;
     float splitPosition;
 

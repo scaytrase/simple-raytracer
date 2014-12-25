@@ -124,7 +124,7 @@ QImage rtScene::getImage( int width, int height, bool preview=false) const
     QRgb * pixels = (QRgb *) malloc(sizeof(QRgb)*W*H);
     timer1.start();
     for (int x = 0; x < W; x++){
-//#pragma omp parallel for firstprivate(newray,x,pixels) private(result)  num_threads(16)
+    #pragma omp parallel for firstprivate(newray,x,pixels) private(result)  num_threads(16)
         for (int y = 0; y < H; y++)
         {
             newray.direction =

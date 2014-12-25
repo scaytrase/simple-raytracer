@@ -42,7 +42,7 @@ void rtImageTexture::setFileName(QString newfilename)
 QDataStream & rtImageTexture::toString(QDataStream & result) const
 {
     result << IMAGE;
-    result << textureName.toAscii();
+    result << textureName.toUtf8();
     result << tileU;
     result << tileV;
     result << mode;

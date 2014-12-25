@@ -1,0 +1,14 @@
+REQUIRED Libs list
+
+bin/Qt5Widgetsd.dll
+bin/Qt5Widgets.dll
+bin/Qt5Cored.dll
+bin/libwinpthread-1.dll
+bin/icuin53.dll
+bin/Qt5Guid.dll
+bin/Qt5Core.dll
+bin/libgcc_s_dw2-1.dll
+bin/libstdc++-6.dll
+bin/Qt5Gui.dll
+bin/icuuc53.dll
+bin/icudt53.dll

@@ -10,7 +10,7 @@
 #include "textures/textureCommon.h"
 #include "kdtree/rtkdtree.h"
 
-#define __CURRENT_VERSION 1.0
+#define __CURRENT_VERSION 1.0f
 
 //! Класс сцены
 
@@ -19,7 +19,7 @@ class rtScene
 {
 private:
     //! Версия структуры сцены
-    static const float version = __CURRENT_VERSION;
+    static constexpr float version = __CURRENT_VERSION;
     //! Максимальная глубина рекурсии при вычислении цвета пикселя.
     static const int recursionMaximumDepth = 7;
     //! Текстура неба

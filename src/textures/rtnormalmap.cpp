@@ -51,7 +51,7 @@ void rtNormalMap::setFileName(QString newfilename)
 QDataStream & rtNormalMap::toString(QDataStream & result) const
 {
     result << NORMAL;
-    result << textureName.toAscii();
+    result << textureName.toUtf8();
     result << tileU;
     result << tileV;
     result << mode;

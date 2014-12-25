@@ -9,7 +9,7 @@
 class rtObject
 {
 protected:
-    static const float zeroThreshold = 1e-5;
+    static constexpr float zeroThreshold = 1e-5f;
     vertex3f position;
     rtMaterial * objMaterial;
     QString name;

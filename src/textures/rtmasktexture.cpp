@@ -16,7 +16,7 @@ Color3 rtMaskTexture::getColorAt(vertex3f oldpoint, vertex3f center) const
 QDataStream & rtMaskTexture::toString(QDataStream & result) const
 {
     result << MASK;
-    result << textureName.toAscii();
+    result << textureName.toUtf8();
     result << tileU;
     result << tileV;
     result << mode;

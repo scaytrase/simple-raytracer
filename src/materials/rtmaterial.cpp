@@ -96,6 +96,6 @@ QDataStream & rtMaterial::toString(QDataStream & result) const
     result << bump_multiplier;
     result << bump_flag;
     result << lModel;
-    result << name.toAscii();
+    result << name.toUtf8();
     return result;
 }

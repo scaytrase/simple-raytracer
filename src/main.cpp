@@ -1,6 +1,6 @@
 #include <QtGui>
+#include <QApplication>
 #include "raytracewindow.h"
-#include "iostream"
 //#include <omp.h>
 
 int main(int argc, char *argv[])

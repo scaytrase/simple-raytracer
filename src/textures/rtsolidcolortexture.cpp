@@ -18,7 +18,7 @@ void rtSolidColorTexture::setSolidColor(Color3 newColor)
 QDataStream & rtSolidColorTexture::toString(QDataStream & result) const
 {
     result << SOLID;
-    result << textureName.toAscii();
+    result << textureName.toUtf8();
     result << tileU;
     result << tileV;
     result << mode;
