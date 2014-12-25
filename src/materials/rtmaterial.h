@@ -3,160 +3,114 @@
 
 #include "utils/utilsCommon.h"
 #include "textures/textureCommon.h"
+#include "lights/lightsCommon.h"
+#include <QByteArray>
+#include <QVector>
+//! Класс материалов
 
-
-static const double default_shiness = 20;
-static const double default_ior		= 1.5;
-static const double default_bump	= 0.5;
-static const double default_trans	= 10;
-
+//! Содержит методы и свойства для всех материалов, используемых в сцене
 class rtMaterial
 {
-private:
-	rtTexture * diffuse_color;
-	rtTexture * ambient_color;
-	rtTexture * specular_color;
-	double  shiness_value;
-	rtTexture * reflection_color;
-	rtTexture * refraction_color;
-	rtTexture * bumpmap;
-	Color3 alpha_Color;
-	double trans;
-	double IoR_value;
-	double bump_value;
-	bool useBumping;
-
-		QString name;
 public:
-	double bumpValue() const {
-		return bump_value;
-	}
+  //! Модель освещения объекта
+  enum lightningModel
+  {
+    LAMBERT = 0, //!< Только фоновое
+    PHONG, //!< Фоновое с бликами
+    BLINN, //!< Не реализовано
+    WARD, //!< Не реализовано
+    NAYAR //!< Не реализовано
+  };
+  //! Получить номер материала
+  int getID() const { return materialGlobalArrayIndex; }
+  //! Конструктор по умолчанию
+  rtMaterial();
+  //! Полный конструктор объекта
+  rtMaterial(
+    //! Имя материала
+    QString new_name = QString ("Material"),
+    //! Цвет рассеивания материала
+    rtTexture *new_diffuse_color = new rtSolidColorTexture(colorDarkGray),
+    //! Фоновый цвет
+    rtTexture *new_ambient_color = new rtSolidColorTexture(colorBlack),
+    //! Цвет бликов
+    rtTexture *new_specular_color = new rtSolidColorTexture(colorWhite),
+    //! Жесткость бликов
+    float new_shininess = DEFAULT_SHININESS,
+    //! Текстура отражения
+    rtTexture *new_reflection_color = 0,
+    //! Флаг отражения
+    bool new_reflection_flag = false,
+    //! Текстура преломления
+    rtTexture *new_refraction_color = 0,
+    //! Флаг преломления
+    bool new_refraction_flag = false,
+    //! Текстура коэфициента преломления
+    rtTexture *new_IoR = 0,
+    //! Множитель текстуры
+    float new_IoR_multiplier = 1,
+    //! Карта нормалей
+    rtTexture *new_bumpMap_texture = 0,
+    //! Множитель карты нормалей
+    float new_bump_multiplier = 30,
+    //! Флаг изменения нормалей
+    bool new_bump_flag = false,
+    //! Модель освещения
+    lightningModel new_lModel = PHONG);
+  //! Вычисление модели освещения
+  Color3 computeColor(vertex3f,vertex3f,rayf, QVector<rtLight *> availableLightList, vertex3f center, Color3 ambientEnvColor) const;
+  //! Вычисление результирущего цвета
+  Color3 combineColor(Color3 lightColor, Color3 reflection, Color3 refraction) const;
+  //! Флаг отражения
+  bool refractionEnabled() const {return refraction_flag;}
+  //! Флаг преломления
+  bool reflectionEnabled() const {return reflection_flag;}
+  //! Функция изменения нормали
+  vertex3f remapNormal( vertex3f old_normal) const;
+private:
+  //! Стандартное значение жесткости блика
+  static const float DEFAULT_SHININESS = 20;
+  //! Стандартное значение коэфициента преломления
+  static const float DEFAULT_IOR	= 1.5;
+  //! Стандартное значение множителя карты нормалей
+  static const float DEFAULT_BUMP	= 0.5;
+  //! Фоновая текстура
+  rtTexture * ambient_color;
+  //! Диффузная текстура
+  rtTexture * diffuse_color;
+  //! Текстура бликов
+  rtTexture * specular_color;
+  //! Жесткость бликов
+  float shininess;
+  //! Текстура отражения
+  rtTexture * reflection_color;
+  //! Флаг отражения
+  bool reflection_flag;
+  //! Текструа преломления
+  rtTexture * refraction_color;
+  //! Флаг преломления
+  bool refraction_flag;
+  //! Текстура коэфициента преломления
+  rtTexture * IoR;
+  //! Множитель текстуры коэфициента преломления
+  float IoR_multiplier;
+  //! Карта нормалей
+  rtTexture * bumpMap_texture;
+  //! Множитель карты нормалей
+  float bump_multiplier;
+  //! Флаг изменения нормали
+  bool bump_flag;
+  //! Модель освещения
+  lightningModel lModel;
+  //! Название материала
+  QString name;
+  //! Функция сериализации экземпляра класса в строку
+  QDataStream & toString(QDataStream &) const;
 
-	Color3 bump(vertex2d point) const
-	{
-		return useBumping ? bumpmap->getColorAt(point) : colorWhite/2;
-	}
-	void setBump(double bmpval = 0.5, rtTexture * newBumpMap = NULL)
-	{
-		if (newBumpMap) bumpmap = newBumpMap;
-		useBumping = true;
-		bump_value = bmpval;
-	}
-	void unsetBump(void)
-	{
-		useBumping = false;
-	}
-
-	bool useBump() const {
-		return useBumping;
-	}
-
-	Color3 diffuse(vertex2d point)const
-	{
-		return diffuse_color->getColorAt(point);
-	}
-	Color3 ambient(vertex2d point)const
-	{
-		return ambient_color->getColorAt(point);
-	}
-	Color3 specular(vertex2d point)const
-	{
-		return specular_color->getColorAt(point);
-	}
-	double shiness()const
-	{
-		return shiness_value;
-	}
-	Color3 reflection(vertex2d point)const
-	{
-		return reflection_color->getColorAt(point);
-	}
-	Color3 refraction(vertex2d point)const
-	{
-		return refraction_color->getColorAt(point);
-	}
-	double ior()const
-	{
-		return IoR_value;
-	}
-
-	void setIor(double newIor){ IoR_value = newIor;}
-	void setShiness(double newShiness) { shiness_value = newShiness;}
-
-	void setTrans(double newTrans) {trans = newTrans;}
-	double getTrans() const {return trans;}
-
-	rtMaterial(
-			Color3 dif = colorLightGray,
-			Color3 amb = colorLightGray,
-			Color3 spe = colorLightGray,
-			Color3 rfl = colorBlack,
-			Color3 frf = colorBlack,
-			double ior = default_ior,
-			double shi = default_shiness,
-			double bmp = default_bump,
-			Color3 alp = colorWhite,
-			double tra = default_trans
-			);
-
-	rtMaterial(
-			rtTexture * dif,
-			rtTexture * amb,
-			rtTexture * spe,
-			rtTexture * rfl,
-			rtTexture * frf,
-			double ior = default_ior,
-			double shi = default_shiness,
-			double bmp = default_bump,
-			double tra = default_trans
-			);
-	void setAlphaColor(Color3 newAlpha)
-	{
-		alpha_Color = newAlpha;
-	}
-	Color3 alphaColor() const
-	{
-		return alpha_Color;
-	}
-
-	void setDiffuseTexture (rtTexture * newtext)
-	{
-		diffuse_color = newtext;
-	}
-
-	void setAmbientTexture (rtTexture * newtext)
-	{
-		ambient_color = newtext;
-	}
-		void setSpecularTexture (rtTexture * newtext)
-	{
-		specular_color = newtext;
-	}
-	void setReflectionTexture (rtTexture * newtext)
-	{
-		reflection_color = newtext;
-	}
-
-	void setRefractionTexture (rtTexture * newtext)
-	{
-		refraction_color = newtext;
-	}
-
-        void setName(QString newName){
-            name = newName;
-        }
-
-        QString getName() const { return name; }
-
-        rtTexture *getDiffuseTexture() const {return diffuse_color;}
-        rtTexture *getAmbientTexture() const {return ambient_color;}
-        rtTexture *getSpecularTexture() const {return specular_color;}
-        rtTexture *getReflectionTexture() const {return reflection_color;}
-        rtTexture *getRefractionTexture() const {return refraction_color;}
-        rtTexture *getBumpMap() const {return bumpmap;}
-
-        Color3 getAlphaColor() const {return alpha_Color;}
-
+  //! Глобальный массив материалов
+  static QVector<rtMaterial *> materialGlobalArray;
+  //! Индекс в массиве материалов
+  int materialGlobalArrayIndex;
 };
 
 #endif // RTMATERIAL_H

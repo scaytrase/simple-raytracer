@@ -6,16 +6,17 @@
 class rtCylinderObject : public rtObject
 {
 private:
-    double height;
-    vertex3d projectXY(vertex3d op) const;
+  vertex3f size;
+    float height;
+    vertex3f projectXY(vertex3f op) const;
 public:
     rtCylinderObject(){}
-    rtCylinderObject(vertex3d position, vertex3d size, double height);
-    vertex3d normal(vertex3d point) const;
-    bool intersects(rayd ray, double &t) const;
+    rtCylinderObject(vertex3f position, vertex3f size, float height);
+    vertex3f normal(vertex3f point) const;
+    bool intersects(rayf ray, float &t) const;
 
-    void setHeight(double newHeight) {height = newHeight;}
-    double getHeight() const {return height;}
+    void setHeight(float newHeight) {height = newHeight;}
+    float getHeight() const {return height;}
 };
 
 #endif // RTCYLINDEROBJECT_H

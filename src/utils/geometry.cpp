@@ -1,104 +1,104 @@
 #include "geometry.h"
 
-double vertex3d::norm()const{
+float vertex3f::norm()const{
     return qSqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
 }
 
-vertex3d::vertex3d(double nx, double ny, double nz){
+vertex3f::vertex3f(float nx, float ny, float nz){
     vec[0] = nx; vec[1] = ny; vec[2] = nz;
 }
 
-vertex3d& vertex3d::operator /= (double op){
+vertex3f& vertex3f::operator /= (float op){
     vec[0] /= op;
     vec[1] /= op;
     vec[2] /= op;
     return (*this);
 }
 
-vertex3d& vertex3d::operator *= (double op){
+vertex3f& vertex3f::operator *= (float op){
     vec[0] *= op;
     vec[1] *= op;
     vec[2] *= op;
     return (*this);
 }
 
-/*inline*/ double vertex3d::operator *(const vertex3d & op)const{
+/*inline*/ float vertex3f::operator *(const vertex3f & op)const{
     return dot_product(op);
 }
 
-/*inline*/ vertex3d vertex3d::operator +(const vertex3d & op)const{
+/*inline*/ vertex3f vertex3f::operator +(const vertex3f & op)const{
     return add(op);
 }
-/*inline*/ vertex3d vertex3d::operator -(const vertex3d & op)const{
+/*inline*/ vertex3f vertex3f::operator -(const vertex3f & op)const{
     return sub(op);
 }
-/*inline*/ vertex3d vertex3d::operator *(const double op)const{
+/*inline*/ vertex3f vertex3f::operator *(const float op)const{
     return mult(op);
 }
-/*inline*/ vertex3d vertex3d::operator /(const double op)const{
+/*inline*/ vertex3f vertex3f::operator /(const float op)const{
     return div(op);
 }
-/*inline*/ double vertex3d::operator !()const{
+/*inline*/ float vertex3f::operator !()const{
     return norm();
 }
-/*inline*/ vertex3d vertex3d::operator[](const vertex3d & op)const{
+/*inline*/ vertex3f vertex3f::operator[](const vertex3f & op)const{
     return vector_mult(op);
 }
 
-vertex3d vertex3d::vector_mult(const vertex3d & op)const{
-    return vertex3d(
+vertex3f vertex3f::vector_mult(const vertex3f & op)const{
+    return vertex3f(
             (vec[1]*op.vec[2] - op.vec[1]*vec[2]),
             -(vec[0]*op.vec[2] - op.vec[0]*vec[2]),
             (vec[0]*op.vec[1] - op.vec[0]*vec[1])
             );
 }
 
-vertex3d vertex3d::div(const double op)const{
-    return vertex3d(
+vertex3f vertex3f::div(const float op)const{
+    return vertex3f(
             vec[0]/op,
             vec[1]/op,
             vec[2]/op);
 }
 
-vertex3d vertex3d::mult(const double op)const{
-    return vertex3d(
+vertex3f vertex3f::mult(const float op)const{
+    return vertex3f(
             op*vec[0],
             op*vec[1],
             op*vec[2]);
 }
 
-vertex3d vertex3d::sub(const vertex3d & op)const{
-    return vertex3d(
+vertex3f vertex3f::sub(const vertex3f & op)const{
+    return vertex3f(
             vec[0] - op.vec[0],
             vec[1] - op.vec[1],
             vec[2] - op.vec[2]);
 }
 
-vertex3d vertex3d::add(const vertex3d & op)const{
-    return vertex3d(
+vertex3f vertex3f::add(const vertex3f & op)const{
+    return vertex3f(
             vec[0] + op.vec[0],
             vec[1] + op.vec[1],
             vec[2] + op.vec[2]);
 }
 
-double vertex3d::dot_product(const vertex3d & op)const{
+float vertex3f::dot_product(const vertex3f & op)const{
     return vec[0]*op.vec[0] + vec[1]*op.vec[1] + vec[2]*op.vec[2];
 }
 
-double vertex3d::dot_product_norm(const vertex3d & op)const{
+float vertex3f::dot_product_norm(const vertex3f & op)const{
     return (vec[0]*op.vec[0] + vec[1]*op.vec[1] + vec[2]*op.vec[2])/(norm() * op.norm());
 }
 
-vertex3d vertex3d::operator /(const vertex3d & op)const
+vertex3f vertex3f::operator /(const vertex3f & op)const
 {
-    return vertex3d(
+    return vertex3f(
             vec[0]/op.vec[0],
             vec[1]/op.vec[1],
             vec[2]/op.vec[2]
             );
 }
-void vertex3d::normalize(){
-    double det = norm();
+void vertex3f::normalize(){
+    float det = norm();
     if (det) {
         vec[0] /= det;
         vec[1] /= det;
@@ -106,31 +106,46 @@ void vertex3d::normalize(){
     }
 }
 
-vertex3d vertex3d::product_be(const vertex3d & op) const
+vertex3f vertex3f::product_be(const vertex3f & op) const
 {
-    return vertex3d(vec[0]*op.vec[0],vec[1]*op.vec[1],vec[2]*op.vec[2]);
+    return vertex3f(vec[0]*op.vec[0],vec[1]*op.vec[1],vec[2]*op.vec[2]);
 }
-vertex3d vertex3d::rotate(const vertex3d & a1,const  vertex3d & a2,const vertex3d & a3) const{
-    vertex3d temp(vec[0],vec[1],vec[2]);
-    return vertex3d(temp*a1,temp*a2,temp*a3);
+vertex3f vertex3f::rotate(const vertex3f & a1,const  vertex3f & a2,const vertex3f & a3) const{
+    vertex3f temp(vec[0],vec[1],vec[2]);
+    return vertex3f(temp*a1,temp*a2,temp*a3);
 
 //    return a1*vec[0]+a2*vec[1]+a3*vec[2];
 }
 
-rayd::rayd(vertex3d np, vertex3d nd){
+rayf::rayf(vertex3f np, vertex3f nd){
     point = np;
     direction = nd;
 }
-void rayd::rotate(const vertex3d & a1,const  vertex3d & a2,const vertex3d & a3)
+void rayf::rotate(const vertex3f & a1,const  vertex3f & a2,const vertex3f & a3)
 {
     point = point.rotate(a1,a2,a3);
     direction = direction.rotate(a1,a2,a3);
 }
 
+vertex2f rayf::toPolar() const
+{
+    return zero_vertex;
+}
 
-vertex2d::vertex2d(double nu, double nv)
+vertex3f rayf::at(float t) const
+{
+    return point + direction*t;
+}
+
+
+vertex2f::vertex2f(float nu, float nv)
 {
     u = nu;
     v = nv;
+}
+
+vertex3f::operator vertex2f() const
+{
+    return vertex2f(vec[0],vec[1]);
 }
 

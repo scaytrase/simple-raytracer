@@ -3,59 +3,70 @@
 
 #include <qmath.h>
 
-static const double pi = 3.1415926535897932384626433832795;
+static const float pi = 3.1415926535897932384626433832795;
 
-class vertex3d{
-private:
-    double norm()const;
+class vertex2f;
+class vertex3f;
+
+
+class vertex2f{
 public:
-    double vec[4];
-    inline double x() { return vec[0]; }
-    inline double y() { return vec[1]; }
-    inline double z() { return vec[2]; }
-    inline double w() { return vec[3]; }
-    vertex3d(double nx=0, double ny=0, double nz=0);
-    vertex3d& operator /= (double op);
-    vertex3d& operator *= (double op);
-    /*inline*/ double operator *(const vertex3d  & op)const;
-    /*inline*/ vertex3d operator +(const vertex3d  & op)const;
-    /*inline*/ vertex3d operator -(const vertex3d  & op)const;
-    /*inline*/ vertex3d operator *(const double op)const;
-    /*inline*/ vertex3d operator /(const double op)const;
-    /*inline*/ double operator !()const;
-    /*inline*/ vertex3d operator[](const vertex3d  & op)const;
-    vertex3d vector_mult(const vertex3d  & op)const;
-    vertex3d div(const double op)const;
-    vertex3d mult(const double op)const;
-    vertex3d sub(const vertex3d  & op)const;
-    vertex3d add(const vertex3d  & op)const;
-    double dot_product(const vertex3d  & op)const;
-    double dot_product_norm(const vertex3d  & op)const;
-    vertex3d operator /(const vertex3d  & op)const;
-    void normalize();
-    vertex3d product_be(const vertex3d & op) const;
-    vertex3d rotate(const vertex3d & a1,const  vertex3d & a2,const vertex3d & a3) const;
+    float u,v;
+    vertex2f(float nu=0, float nv=0);
+
 };
 
-static const vertex3d zero_vertex(0,0,0);
-static const vertex3d
+class vertex3f{
+private:
+    float norm()const;
+public:
+    float vec[4];
+    inline float x() const { return vec[0]; }
+    inline float y() const { return vec[1]; }
+    inline float z() const { return vec[2]; }
+    inline float w() const { return vec[3]; }
+    vertex3f(float nx=0, float ny=0, float nz=0);
+    vertex3f& operator /= (float op);
+    vertex3f& operator *= (float op);
+    /*inline*/ float operator *(const vertex3f  & op)const;
+    /*inline*/ vertex3f operator +(const vertex3f  & op)const;
+    /*inline*/ vertex3f operator -(const vertex3f  & op)const;
+    /*inline*/ vertex3f operator *(const float op)const;
+    /*inline*/ vertex3f operator /(const float op)const;
+    /*inline*/ float operator !()const;
+    /*inline*/ vertex3f operator[](const vertex3f  & op)const;
+    vertex3f vector_mult(const vertex3f  & op)const;
+    vertex3f div(const float op)const;
+    vertex3f mult(const float op)const;
+    vertex3f sub(const vertex3f  & op)const;
+    vertex3f add(const vertex3f  & op)const;
+    float dot_product(const vertex3f  & op)const;
+    float dot_product_norm(const vertex3f  & op)const;
+    vertex3f operator /(const vertex3f  & op)const;
+    void normalize();
+    vertex3f product_be(const vertex3f & op) const;
+    vertex3f rotate(const vertex3f & a1,const  vertex3f & a2,const vertex3f & a3) const;
+    operator vertex2f() const;
+};
+
+static const vertex3f zero_vertex(0,0,0);
+static const vertex3f
         xDirection(1,0,0),
         yDirection(0,1,0),
         zDirection(0,0,1);
 
 
-class rayd{
+
+
+class rayf{
 public:
-    vertex3d point;
-    vertex3d direction;
-    rayd(vertex3d np = zero_vertex, vertex3d nd = zero_vertex);
-    void rotate(const vertex3d & a1,const  vertex3d & a2,const vertex3d & a3);
+    vertex3f point;
+    vertex3f direction;
+    rayf(vertex3f np = zero_vertex, vertex3f nd = zero_vertex);
+    void rotate(const vertex3f & a1,const  vertex3f & a2,const vertex3f & a3);
+    vertex2f toPolar() const;
+    vertex3f at(float t) const;
 };
 
-class vertex2d{
-public:
-    double u,v;
-    vertex2d(double nu=0, double nv=0);
-};
 
 #endif // VECTORS_H

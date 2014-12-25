@@ -9,9 +9,10 @@ private:
     Color3 SolidColor;
 public:
     Color3 getSolidColor()const{return SolidColor;}
-    rtSolidColorTexture(Color3 color, QString newName = "");
-    Color3 getColorAt(vertex2d point) const;
+    rtSolidColorTexture(Color3 color);
+    Color3 getColorAt(vertex3f point, vertex3f center) const;
     void setSolidColor(Color3 newColor);
+    QDataStream & toString(QDataStream&) const;
 };
 
 #endif // RTSOLIDCOLORTEXTURE_H

@@ -17,6 +17,7 @@ public:
     void setMean(bool newMean);
     void load();
     void setFileName(QString newfilename);
+    QDataStream & toString(QDataStream &) const;
 };
 
 #endif // RTNORMALMAP_H

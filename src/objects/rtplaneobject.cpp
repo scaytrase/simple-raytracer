@@ -1,22 +1,27 @@
 #include "rtplaneobject.h"
 
-rtPlaneObject::rtPlaneObject(vertex3d pos) : rtObject()
+rtPlaneObject::rtPlaneObject(vertex3f pos) : rtObject()
 {
     position = pos;
+    unlimited = true;
 }
 
 
 
-vertex3d rtPlaneObject::normal(vertex3d point)const{
-    return (zDirection).rotate(rf1,rf2,rf3);
+vertex3f rtPlaneObject::normal(vertex3f )const{
+    return (zDirection);
 }
 
-bool rtPlaneObject::intersects(rayd ray, double &t) const
+bool rtPlaneObject::intersects(rayf ray, float &t) const
 {
     ray.point = ray.point - position;
-    ray.rotate(rb1,rb2,rb3);
-    double an = ray.direction.z();
+    float an = ray.direction.z();
     if (qAbs(an) < zeroThreshold) return false;
     t = - ( ray.point.z() ) / an;
     return t > zeroThreshold;
+}
+
+rtbbox * rtPlaneObject::GetBBox() const
+{
+  return new rtbbox(0,0,-1,0,0,1);
 }

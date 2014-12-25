@@ -1,39 +1,38 @@
 #include "rtconeobject.h"
 #include <qmath.h>
 
-rtConeObject::rtConeObject(vertex3d pos, double lh, double uh, vertex3d nsize):rtObject()
+rtConeObject::rtConeObject(vertex3f pos, float lh, float uh, vertex3f nsize):rtObject()
 {
     position = pos;
     upperHeight = lh - uh;
     lowerHeight  = lh;
-    size = vertex3d(nsize.x()/lh,nsize.y()/lh,nsize.z());
+    size = vertex3f(nsize.x()/lh,nsize.y()/lh,nsize.z());
 }
 
-bool rtConeObject::intersects(rayd ray, double &t) const
+bool rtConeObject::intersects(rayf ray, float &t) const
 {
     ray.point = ray.point - position;
-    ray.rotate(rb1,rb2,rb3);
-    vertex3d point = (ray.point - zDirection*lowerHeight);
-    vertex3d
+    vertex3f point = (ray.point - zDirection*lowerHeight);
+    vertex3f
             pN = point,
             pM = mirrorZ(pN)/size,
             dN = ray.direction,
             dM = mirrorZ(ray.direction)/size;
     pN = pN/size;
     dN = dN/size;
-    double
+    float
             a = (dN)*(dM),
             b = (pN)*(dM),
             c = (pN)*(pM),
             D = b*b - a*c;
     if ( D < zeroThreshold ) return false;
-    double
+    float
             qD = qSqrt(D),
             t1 = ( -b + qD)/(a),
             t2 = ( -b - qD)/(a);
     if (t2 < zeroThreshold && t1 < zeroThreshold)
         return false;
-    vertex3d
+    vertex3f
             point1 = (ray.point + ray.direction*t1),
             point2 = (ray.point + ray.direction*t2);
     if (t2 > zeroThreshold && point2.z() > 0 && point2.z() < upperHeight)
@@ -51,25 +50,25 @@ bool rtConeObject::intersects(rayd ray, double &t) const
 
 }
 
-vertex3d rtConeObject::normal(vertex3d oldpoint) const
+vertex3f rtConeObject::normal(vertex3f oldpoint) const
 {
-    vertex3d point = (oldpoint - position).rotate(rf1,rf2,rf3);
+    vertex3f point = (oldpoint - position);
     point = point - zDirection*lowerHeight;
     if (qAbs(point.z()) > zeroThreshold)
     {
-        vertex3d result(point.x(),point.y(),-(
+        vertex3f result(point.x(),point.y(),-(
                 point.x()*point.x() +
                 point.y()*point.y()
                 )/point.z());
-        return (result).rotate(rb1,rb2,rb3);
+        return result;
     }else
     {
-        vertex3d result(0,0,1);
-        return (result/size).rotate(rf1,rf2,rf3);
+        vertex3f result(0,0,1);
+        return result/size;
     }
 }
 
-vertex3d rtConeObject::mirrorZ(vertex3d a) const
+vertex3f rtConeObject::mirrorZ(vertex3f a) const
 {
-    return vertex3d(a.x(),a.y(),-a.z());
+    return vertex3f(a.x(),a.y(),-a.z());
 }

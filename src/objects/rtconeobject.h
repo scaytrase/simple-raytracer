@@ -6,19 +6,20 @@
 class rtConeObject : public rtObject
 {
 private:
-    double upperHeight,lowerHeight;
-    vertex3d mirrorZ(vertex3d a) const;
+  vertex3f size;
+    float upperHeight,lowerHeight;
+    vertex3f mirrorZ(vertex3f a) const;
 public:
     rtConeObject(){}
-    rtConeObject(vertex3d position, double lh, double uh, vertex3d size);
-    bool intersects(rayd ray, double &t) const;
-    vertex3d normal(vertex3d point) const;
+    rtConeObject(vertex3f position, float lh, float uh, vertex3f size);
+    bool intersects(rayf ray, float &t) const;
+    vertex3f normal(vertex3f point) const;
 
-    void setUpperHeight(double uh) {upperHeight = uh;}
-    void setLowerHeight(double lh) {lowerHeight = lh;}
+    void setUpperHeight(float uh) {upperHeight = uh;}
+    void setLowerHeight(float lh) {lowerHeight = lh;}
 
-    double getUpperHeight() const {return upperHeight;}
-    double getLowerHeight() const {return lowerHeight;}
+    float getUpperHeight() const {return upperHeight;}
+    float getLowerHeight() const {return lowerHeight;}
 };
 
 #endif // RTCONEOBJECT_H

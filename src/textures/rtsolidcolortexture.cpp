@@ -1,12 +1,11 @@
 #include "rtsolidcolortexture.h"
 
-rtSolidColorTexture::rtSolidColorTexture(Color3 color, QString newName):rtTexture("Solid Color")
+rtSolidColorTexture::rtSolidColorTexture(Color3 color):rtTexture()
 {
     SolidColor = color;
-    if (newName != "") name = newName;
-}
+    }
 
-Color3 rtSolidColorTexture::getColorAt(vertex2d ) const
+Color3 rtSolidColorTexture::getColorAt(vertex3f , vertex3f) const
 {
     return SolidColor;
 }
@@ -14,4 +13,17 @@ Color3 rtSolidColorTexture::getColorAt(vertex2d ) const
 void rtSolidColorTexture::setSolidColor(Color3 newColor)
 {
     SolidColor = newColor;
+}
+
+QDataStream & rtSolidColorTexture::toString(QDataStream & result) const
+{
+    result << SOLID;
+    result << textureName.toAscii();
+    result << tileU;
+    result << tileV;
+    result << mode;
+    result << SolidColor.r;
+    result << SolidColor.g;
+    result << SolidColor.b;
+    return result;
 }

@@ -6,14 +6,16 @@
 class rtSphereObject : public rtObject
 {
 private:
+  vertex3f size;
     bool invNormal;
 public:
-    rtSphereObject() {}
-    rtSphereObject(vertex3d pos, double radius);
-    rtSphereObject(vertex3d pos, vertex3d size);
-    vertex3d normal(vertex3d point)const;
+    rtSphereObject(){unlimited = false;}
+    rtSphereObject(vertex3f pos, float radius);
+    rtSphereObject(vertex3f pos, vertex3f size);
+    vertex3f normal(vertex3f point)const;
     void setNormal(bool invert=false);
-    bool intersects(rayd ray, double &t) const;
+    bool intersects(rayf ray, float &t) const;
+    rtbbox * GetBBox() const;
 };
 
 #endif // RTSPHEREOBJECT_H

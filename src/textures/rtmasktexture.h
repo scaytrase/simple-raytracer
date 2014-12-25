@@ -23,11 +23,12 @@ public:
     {
         blackTexture = newBlack;
     }
-    Color3 getColorAt(vertex2d point) const;
+    Color3 getColorAt(vertex3f point, vertex3f center) const;
 
     rtTexture *getMaskTexture()  const {return maskTexture;}
     rtTexture *getWhiteTexture() const {return whiteTexture;}
     rtTexture *getBlackTexture() const {return blackTexture;}
+    QDataStream & toString(QDataStream&) const;
 };
 
 #endif // RTMASKTEXTURE_H

@@ -28,8 +28,7 @@ void rtNormalMap::load()
                 for (int kx = 0; kx < 3; kx++)
                     for (int ky = 0; ky < 3; ky++)
                         tiled.setPixel(kx*w + x,ky*h + y,texture.pixel(x,y));
-        \
-                if (mean) tiled = filters::mean(tiled);
+
         for (int x = 0; x < w; x++)
         {
             for (int y = 0; y < h; y++)
@@ -47,4 +46,26 @@ void rtNormalMap::load()
 void rtNormalMap::setFileName(QString newfilename)
 {
     rtImageTexture::setFileName(newfilename);
+}
+
+QDataStream & rtNormalMap::toString(QDataStream & result) const
+{
+    result << NORMAL;
+    result << textureName.toAscii();
+    result << tileU;
+    result << tileV;
+    result << mode;
+    result << loaded;
+    if (loaded)
+    {
+        result << h;
+        result << w;
+        result << texture;
+    }
+    else
+    {
+        result << filename;
+        result << mean;
+    }
+    return result;
 }

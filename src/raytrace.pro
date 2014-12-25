@@ -14,21 +14,18 @@ SOURCES += main.cpp \
     objects/rtobject.cpp \
     materials/rtmaterial.cpp \
     lights/rtlight.cpp \
-    gui/objectdialog.cpp \
-    gui/mainwindow.cpp \
-    gui/lightdialog.cpp \
-    gui/texturedialog.cpp \
     textures/rtnormalmap.cpp \
-    utils/filters.cpp \
     utils/geometry.cpp \
-    gui/materialdialog.cpp \
-    objects/rtquadobject.cpp \
     objects/rtconeobject.cpp \
     objects/rtcylinderobject.cpp \
-    objects/rtdiskobject.cpp
+    kdtree/rtkdtree.cpp \
+    utils/rtbbox.cpp \
+    objects/rtpolyobject.cpp \
+    kdtree/rtkdsplitplane.cpp \
+    kdtree/rtkdnode.cpp
 
-HEADERS += raytracewindow.h \
-    rtscene.h \
+HEADERS +=     rtscene.h \
+    raytracewindow.h \
     textures/rttexture.h \
     textures/rtsolidcolortexture.h \
     textures/rtmasktexture.h \
@@ -45,24 +42,14 @@ HEADERS += raytracewindow.h \
     materials/materialsCommon.h \
     objects/objectsCommon.h \
     textures/textureCommon.h \
-    gui/objectdialog.h \
-    gui/mainwindow.h \
-    gui/lightdialog.h \
-    gui/texturedialog.h \
     textures/rtnormalmap.h \
-    utils/filters.h \
-    gui/materialdialog.h \
-    objects/rtquadobject.h \
     objects/rtconeobject.h \
     objects/rtcylinderobject.h \
-    objects/rtdiskobject.h
-
-FORMS += \
-    gui/objectdialog.ui \
-    gui/mainwindow.ui \
-    gui/lightdialog.ui \
-    gui/texturedialog.ui \
-    gui/materialdialog.ui
+    kdtree/rtkdtree.h \
+    utils/rtbbox.h \
+    objects/rtpolyobject.h \
+    kdtree/rtkdsplitplane.h \
+    kdtree/rtkdnode.h
 
 
 QMAKE_LIBS    += -lgomp -lpthread

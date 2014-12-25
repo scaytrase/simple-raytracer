@@ -5,11 +5,14 @@
 
 class rtPlaneObject : public rtObject
 {
+private:
+
 public:
-    rtPlaneObject(){}
-    rtPlaneObject(vertex3d position);
-    vertex3d normal(vertex3d point)const;
-    bool intersects(rayd ray, double &t) const;
+    rtPlaneObject(){unlimited = true;}
+    rtPlaneObject(vertex3f position);
+    vertex3f normal(vertex3f point)const;
+    bool intersects(rayf ray, float &t) const;
+    rtbbox * GetBBox() const;
 };
 
 #endif // RTPLANEOBJECT_H

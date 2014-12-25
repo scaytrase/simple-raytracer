@@ -15,8 +15,8 @@ public:
     void setPreview(bool newPreview);
 private:
     QImage currentImage;
-    double dh,dv,distanse;
-    double meantime, meancount;
+    float dh,dv,distanse;
+    float meantime, meancount;
     QVector< QVector <Color3> > buffer;
     QImage renderScene();
     QImage previewScene();

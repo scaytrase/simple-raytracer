@@ -1,6 +1,6 @@
 #include "rtimagetexture.h"
 
-rtImageTexture::rtImageTexture(QString newfilename):rtTexture("Image " + newfilename)
+rtImageTexture::rtImageTexture(QString newfilename):rtTexture()
 {
     setFileName(newfilename);
 }
@@ -9,11 +9,12 @@ rtImageTexture::rtImageTexture()
 {
 }
 
-Color3 rtImageTexture::getColorAt(vertex2d oldpoint) const
+Color3 rtImageTexture::getColorAt(vertex3f oldpoint, vertex3f center) const
 {
-    vertex2d point(
-            oldpoint.u*tileU,
-            oldpoint.v*tileV);
+    vertex2f point2d = mapTexture(oldpoint, center);
+    vertex2f point(
+                point2d.u*tileU,
+                point2d.v*tileV);
     if (loaded)
     {
         int x = (int(w*point.u)%w + w)%w;
@@ -35,4 +36,24 @@ void rtImageTexture::setFileName(QString newfilename)
         h = texture.height();
         w = texture.width();
     }
+}
+
+
+QDataStream & rtImageTexture::toString(QDataStream & result) const
+{
+    result << IMAGE;
+    result << textureName.toAscii();
+    result << tileU;
+    result << tileV;
+    result << mode;
+    result << loaded;
+    if (loaded)
+    {
+        result << h;
+        result << w;
+        result << texture;
+    }
+    else
+        result << filename;
+    return result;
 }

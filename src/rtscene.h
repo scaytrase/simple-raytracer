@@ -8,43 +8,55 @@
 #include "lights/lightsCommon.h"
 #include "materials/materialsCommon.h"
 #include "textures/textureCommon.h"
+#include "kdtree/rtkdtree.h"
 
+#define __CURRENT_VERSION 1.0
+
+//! Класс сцены
+
+//! Содержит все необходимое для рассчета сцены и получения двумерного изображения методом трассировки лучей
 class rtScene
 {
 private:
-    QImage envyTexture;
-
+    //! Версия структуры сцены
+    static const float version = __CURRENT_VERSION;
+    //! Максимальная глубина рекурсии при вычислении цвета пикселя.
+    static const int recursionMaximumDepth = 7;
+    //! Текстура неба
+    rtTexture * skyMapTexture;
+    //! Цвет освещения окружения
+    Color3 ambientEnvColor;
+    //! кД-Дерево
+    rtkdTree objectsTree;
+    //! Вектор объектов
     QVector<rtObject*> objectList;
+    //! Вектор источников света
     QVector<rtLight*> lightList;
-    rtTexture * skymap;
-    rtSphereObject * sky;
-    double ambientIntensity;
-    static const int maxlevel = 4;
-    QVector<int> availableLights(vertex3d point) const;
-    bool hitObject(rayd ray, int &object_id, double &distanse) const ;
-    bool justHit(rayd ray) const;
-    Color3 combineColors(
-            const Color3 &diffuse,
-            const Color3 &reflection,
-            const Color3 &refraction,
-            const Color3 &RLC,
-            const Color3 &RFC) const;
+    //! Функция расчета луча
+    Color3 castRay(rayf ray, int level, bool preview) const;
+    //! Угол обзора наблюдателя
+    float perspective_angle;
+    //! Позиция наблюдателя
+    vertex3f observer_pos;
+    //! Точка наблюдения
+    vertex3f spot_pos;
+    //! Вертикальное направление
+    vertex3f up_vector;
 public:
-    double perspective_angle;
-    vertex3d observer_pos;
-    vertex3d spot_pos;
-    vertex3d up_vector;
-    Color3 sendRay(rayd ray, int level) const;
-    Color3 sendPreviewRay(rayd ray) const;
+    //! Функция получения отрендеренного изображения сцены
+    QImage getImage(int w, int h, bool preview) const;
+    //! Конструктор по умолчанию
     rtScene();
-    void setObserver(vertex3d newObserver);
-    void setSpot(vertex3d spot);
-
-    void loadObjectList(QVector<rtObject *> newObjectList);
-    void loadLightList(QVector<rtLight *> newLightList);
-
-    void save(QString fileName) {}
-    void load(QString fileName) {}
+    //! Конструктор по имени файла содержимого
+    rtScene(QString filename);
+    //! Установка позиции наблюдателя
+    void setObserver(vertex3f observer) { observer_pos = observer;}
+    //! Установка позиции точки наблюдения
+    void setSpot (vertex3f spot) {spot_pos = spot;}
+    //! Сохранение текущего состояния сцены в файл
+    void save(QString filename) const;
+    //! Загрузка состояния сцены из файла
+    void load(QString filename);
 };
 
 #endif // RTSCENE_H
