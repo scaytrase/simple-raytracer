@@ -1,22 +1,18 @@
 #include "rtkdtree.h"
 #include <QTime>
 
-rtkdTree::rtkdTree()
-{
+rtkdTree::rtkdTree() {
 }
 
-bool rtkdTree::traverse(rayf ray, int &id, float &t) const
-{
+bool rtkdTree::traverse(rayf ray, int &id, float &t) const {
 
     id = -1;
-    bool found=false;
+    bool found = false;
     float inter;
-    float t_n,t_f;
-    for (int i = 0; i < unlim_objects.size(); ++i)
-    {
-        if (unlim_objects [i]->intersects(ray,inter))
-        {
-            if ( !found  ||inter < t  ){
+    float t_n, t_f;
+    for (int i = 0; i < unlim_objects.size(); ++i) {
+        if (unlim_objects[i]->intersects(ray, inter)) {
+            if (!found || inter < t) {
                 t = inter;
                 id = unlim_objects_realIDX[i];
                 found = true;
@@ -26,15 +22,13 @@ bool rtkdTree::traverse(rayf ray, int &id, float &t) const
     }
 
     if (objects.isEmpty() && !found) return false;
-    if (!root.bbox->intersects(ray,t_n,t_f) && !found) return false;
+    if (!root.bbox->intersects(ray, t_n, t_f) && !found) return false;
 
     float tr;
-    int idr=-1;
+    int idr = -1;
 
-    if (traverseNode((rtkdNode *)(&root), ray, idr, tr, t_n, t_f))
-    {
-        if (!found || tr < t)
-        {
+    if (traverseNode((rtkdNode *) (&root), ray, idr, tr, t_n, t_f)) {
+        if (!found || tr < t) {
             id = objects_realIDX[idr];
             t = tr;
         }
@@ -84,8 +78,8 @@ bool rtkdTree::traverseNode(rtkdNode *node, rayf ray, int &id, float &t, float t
         } else use[1].use = false;
 
         int nearest = node->splitPlane->getNearest(ray,
-                                                   node->bbox->point,
-                                                   node->bbox->point + node->bbox->size);
+                node->bbox->point,
+                node->bbox->point + node->bbox->size);
 
         //        if (nearest == 0 || t_split < 0) {
         if (nearest == 0) {
@@ -100,16 +94,15 @@ bool rtkdTree::traverseNode(rtkdNode *node, rayf ray, int &id, float &t, float t
             int j = i;
             if (nearest == 2) j = 1 - i;
 
-            if (use[i].use)
-                if (traverseNode(node->childs.at(j), ray, nearesObjectID, intersectionPoint, use[i].t_n, use[i].t_f)) {
-                    if (!intersectionFound || intersectionPoint < t) {
-                        t = intersectionPoint;
-                        id = nearesObjectID;
-                        intersectionFound = true;
+            if (use[i].use) if (traverseNode(node->childs.at(j), ray, nearesObjectID, intersectionPoint, use[i].t_n, use[i].t_f)) {
+                if (!intersectionFound || intersectionPoint < t) {
+                    t = intersectionPoint;
+                    id = nearesObjectID;
+                    intersectionFound = true;
 
-                        if (nearest != 0) break;
-                    }
+                    if (nearest != 0) break;
                 }
+            }
 
         }
 
@@ -119,24 +112,19 @@ bool rtkdTree::traverseNode(rtkdNode *node, rayf ray, int &id, float &t, float t
 }
 
 
-rtkdTree::~rtkdTree()
-{
+rtkdTree::~rtkdTree() {
 
 }
 
-void rtkdTree::loadObjects(QVector<rtObject*> objectList)
-{
+void rtkdTree::loadObjects(QVector<rtObject *> objectList) {
     root.objects.clear();
 
-    for (int i =0; i < objectList.size(); ++i)
-    {
-        if (objectList[i]->isUnlimited())
-        {
+    for (int i = 0; i < objectList.size(); ++i) {
+        if (objectList[i]->isUnlimited()) {
             unlim_objects.append(objectList[i]);
             unlim_objects_realIDX.append(i);
         }
-        else
-        {
+        else {
             objects.append(objectList[i]);
             objects_realIDX.append(i);
 
@@ -145,11 +133,10 @@ void rtkdTree::loadObjects(QVector<rtObject*> objectList)
     }
 
 
-
-    float minx=0, miny=0, minz=0, maxx=0, maxy=0, maxz=0;
+    float minx = 0, miny = 0, minz = 0, maxx = 0, maxy = 0, maxz = 0;
 
     //root.objects = objectList;
-    for (int i = 0; i < root.objects.count(); i++){
+    for (int i = 0; i < root.objects.count(); i++) {
 
         rtObject *obj = root.objects.at(i);
         //rtbbox *bbox = root.objects.at(i)->GetBBox();
@@ -179,25 +166,24 @@ void rtkdTree::loadObjects(QVector<rtObject*> objectList)
 
     runNode(&root, 0);
 
-   // outTree();
+    // outTree();
 
 }
 
-void rtkdTree::runNode(rtkdNode *node, int depth){
+void rtkdTree::runNode(rtkdNode *node, int depth) {
 
     float T0 = 1;
     node->childs.clear();
 
-    if (node->objects.count() == 0)  return;
+    if (node->objects.count() == 0) return;
     if (depth >= 20) return;
 
     char dir = 0;
 
-    if (node->bbox->size.x() > node->bbox->size.y())
-        if (node->bbox->size.x() > node->bbox->size.z())
-            dir = 'x';
-        else
-            dir = 'z';
+    if (node->bbox->size.x() > node->bbox->size.y()) if (node->bbox->size.x() > node->bbox->size.z())
+        dir = 'x';
+    else
+        dir = 'z';
     else if (node->bbox->size.y() > node->bbox->size.z())
         dir = 'y';
     else
@@ -226,17 +212,17 @@ void rtkdTree::runNode(rtkdNode *node, int depth){
             for (int j = 0; j < node->objects.count(); j++) {
 
                 if (X < node->objects.at(j)->GetBBox()->getX(dir, 1))
-                    Wright += T0*1;
+                    Wright += T0 * 1;
                 else
-                    Wleft += T0*1;
+                    Wleft += T0 * 1;
 
                 if (X > node->objects.at(j)->GetBBox()->getX(dir, 2))
-                    Wleft += T0*1;
+                    Wleft += T0 * 1;
                 else
-                    Wright += T0*1;
+                    Wright += T0 * 1;
             } // for j
 
-            SAH = T0 + 80*(X - min)/L*Wleft + 80*(L - (X - min))/L*Wright;
+            SAH = T0 + 80 * (X - min) / L * Wleft + 80 * (L - (X - min)) / L * Wright;
 
             if (SAH < minSAH || minSAH == -1) {
                 minSAH = SAH;
@@ -249,8 +235,8 @@ void rtkdTree::runNode(rtkdNode *node, int depth){
     nLeft = new rtkdNode();
     nRight = new rtkdNode();
 
-    nLeft->bbox = node->bbox->cut(optX - min, dir, 1);
-    nRight->bbox = node->bbox->cut(optX - min, dir, 2);
+    nLeft->bbox = node->bbox->cut((float) (optX - min), dir, 1);
+    nRight->bbox = node->bbox->cut((float) (optX - min), dir, 2);
 
     if (optX == min || optX == max) return;
 
@@ -266,7 +252,7 @@ void rtkdTree::runNode(rtkdNode *node, int depth){
         else right = true;
 
         if (right) nRight->objects << obj;
-        if (left)  nLeft->objects << obj;
+        if (left) nLeft->objects << obj;
 
     } // for i
 
@@ -274,7 +260,7 @@ void rtkdTree::runNode(rtkdNode *node, int depth){
     runNode(nRight, depth + 1);
 
     node->childs << nLeft << nRight;
-    node->splitPlane = new rtkdSplitPlane(dir, optX);
+    node->splitPlane = new rtkdSplitPlane(dir, (float) optX);
 
 } // runNode
 

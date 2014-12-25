@@ -3,40 +3,43 @@
 
 #include "utils/utilsCommon.h"
 
-class rtLight
-{
+class rtLight {
 private:
     vertex3f position;
     Color3 color;
     float intensity;
 public:
-	rtLight();
-	rtLight(Color3 newColor,vertex3f newpos, float inten)
-	{
-		color = newColor;
-		position = newpos;
-		intensity = inten;
-	}
+    rtLight();
 
-	void setColor(Color3 newColor){
-		color = newColor;
-	}
-	void setPosition(vertex3f newPosition){
-		position = newPosition;
-	}
+    rtLight(Color3 newColor, vertex3f newpos, float inten) {
+        color = newColor;
+        position = newpos;
+        intensity = inten;
+    }
 
-	void setIntensity(float newIntensity){
-		intensity = newIntensity;
-	}
-	Color3 getColor()const{
-		return color;
-	}
-	vertex3f getPosition()const{
-		return position;
-	}
-	float getIntensity()const{
-		return intensity;
-	}
+    void setColor(Color3 newColor) {
+        color = newColor;
+    }
+
+    void setPosition(vertex3f newPosition) {
+        position = newPosition;
+    }
+
+    void setIntensity(float newIntensity) {
+        intensity = newIntensity;
+    }
+
+    Color3 getColor() const {
+        return color;
+    }
+
+    vertex3f getPosition() const {
+        return position;
+    }
+
+    float getIntensity() const {
+        return intensity;
+    }
 
 };
 

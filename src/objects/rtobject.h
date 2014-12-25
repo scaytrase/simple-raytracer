@@ -6,26 +6,37 @@
 #include "textures/textureCommon.h"
 
 
-class rtObject
-{
+class rtObject {
 protected:
     static constexpr float zeroThreshold = 1e-5f;
     vertex3f position;
-    rtMaterial * objMaterial;
+    rtMaterial *objMaterial;
     QString name;
     bool unlimited;
 
- public:
+public:
     rtObject();
-    void setMaterial(rtMaterial * newmat){
+
+    void setMaterial(rtMaterial *newmat) {
         objMaterial = newmat;
     }
 
-    rtMaterial * material() const {return objMaterial;}
-    virtual vertex3f normal(vertex3f point)const =0;
-    virtual bool intersects(rayf ray, float &t)const = 0;
-    vertex3f getPosition()const {return position;}
-    bool isUnlimited() const {return unlimited;}
+    rtMaterial *material() const {
+        return objMaterial;
+    }
+
+    virtual vertex3f normal(vertex3f point) const = 0;
+
+    virtual bool intersects(rayf ray, float &t) const = 0;
+
+    vertex3f getPosition() const {
+        return position;
+    }
+
+    bool isUnlimited() const {
+        return unlimited;
+    }
+
     virtual rtbbox *GetBBox() const = 0;
 };
 

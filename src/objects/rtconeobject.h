@@ -3,23 +3,38 @@
 
 #include "rtobject.h"
 
-class rtConeObject : public rtObject
-{
+class rtConeObject : public rtObject {
 private:
-  vertex3f size;
-    float upperHeight,lowerHeight;
+    vertex3f size;
+    float upperHeight, lowerHeight;
+
     vertex3f mirrorZ(vertex3f a) const;
+
 public:
-    rtConeObject(){}
+    rtConeObject() {
+    }
+
     rtConeObject(vertex3f position, float lh, float uh, vertex3f size);
+
     bool intersects(rayf ray, float &t) const;
+
     vertex3f normal(vertex3f point) const;
 
-    void setUpperHeight(float uh) {upperHeight = uh;}
-    void setLowerHeight(float lh) {lowerHeight = lh;}
+    void setUpperHeight(float uh) {
+        upperHeight = uh;
+    }
 
-    float getUpperHeight() const {return upperHeight;}
-    float getLowerHeight() const {return lowerHeight;}
+    void setLowerHeight(float lh) {
+        lowerHeight = lh;
+    }
+
+    float getUpperHeight() const {
+        return upperHeight;
+    }
+
+    float getLowerHeight() const {
+        return lowerHeight;
+    }
 };
 
 #endif // RTCONEOBJECT_H

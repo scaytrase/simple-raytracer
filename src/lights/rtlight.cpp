@@ -1,5 +1,4 @@
 #include "rtlight.h"
 
-rtLight::rtLight()
-{
+rtLight::rtLight() {
 }

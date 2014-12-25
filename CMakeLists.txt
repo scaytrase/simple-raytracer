@@ -14,7 +14,7 @@ set(CMAKE_AUTOMOC ON)
 # Find the QtWidgets library
 find_package(Qt5Widgets REQUIRED)
 
-# Find the QtWidgets library
+
 find_package(OpenMP)
 
 # The Qt5Widgets_INCLUDES also includes the include directories for
@@ -90,7 +90,7 @@ set(SOURCE_FILES
     src/raytracewindow.h
     src/rtscene.cpp
     src/rtscene.h
-    readme.txt)
+    )
 
 include_directories(src)
 

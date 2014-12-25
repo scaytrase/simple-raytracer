@@ -10,27 +10,28 @@
 #include "kdtree/rtkdnode.h"
 
 
-
-class rtkdTree
-{
+class rtkdTree {
 private:
-    QVector<rtObject*> objects;
+    QVector<rtObject *> objects;
     QVector<rtObject *> unlim_objects;
     QVector<int> objects_realIDX;
     QVector<int> unlim_objects_realIDX;
     rtkdNode root;
 public:
     rtkdTree();
+
     ~rtkdTree();
 
-    void loadObjects( QVector<rtObject*> objectList );
-    bool traverse(rayf,int&,float&) const;
+    void loadObjects(QVector<rtObject *> objectList);
 
-    bool traverseNode(rtkdNode*, rayf, int&, float&, float, float) const;
+    bool traverse(rayf, int &, float &) const;
+
+    bool traverseNode(rtkdNode *, rayf, int &, float &, float, float) const;
 
     void runNode(rtkdNode *node, int depth);
 
     void outTree();
+
     void outNode(rtkdNode *node);
 };
 

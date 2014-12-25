@@ -1,30 +1,27 @@
 #include "rtmaterial.h"
-#include "qmath.h"
 
-rtMaterial::rtMaterial()
-{
+rtMaterial::rtMaterial() {
 //    materialGlobalArray.append(this);
 //    materialGlobalArrayIndex = materialGlobalArray.indexOf(this);
 }
 
 rtMaterial::rtMaterial(
 
-    QString new_name,
-    rtTexture *new_diffuse_color,
-    rtTexture *new_ambient_color,
-    rtTexture *new_specular_color,
-    float new_shininess,
-    rtTexture *new_reflection_color,
-    bool new_reflection_flag,
-    rtTexture *new_refraction_color,
-    bool new_refraction_flag,
-    rtTexture *new_IoR,
-    float new_IoR_multiplier,
-    rtTexture *new_bumpMap_texture,
-    float new_bump_multiplier,
-    bool new_bump_flag,
-    lightningModel new_lModel)
-{
+        QString new_name,
+        rtTexture *new_diffuse_color,
+        rtTexture *new_ambient_color,
+        rtTexture *new_specular_color,
+        float new_shininess,
+        rtTexture *new_reflection_color,
+        bool new_reflection_flag,
+        rtTexture *new_refraction_color,
+        bool new_refraction_flag,
+        rtTexture *new_IoR,
+        float new_IoR_multiplier,
+        rtTexture *new_bumpMap_texture,
+        float new_bump_multiplier,
+        bool new_bump_flag,
+        lightningModel new_lModel) {
 //    materialGlobalArray.append(this);
 //    materialGlobalArrayIndex = materialGlobalArray.indexOf(this);
     name = new_name;
@@ -34,7 +31,7 @@ rtMaterial::rtMaterial(
     shininess = new_shininess;
     reflection_color = new_reflection_color;
     reflection_flag = new_reflection_flag;
-    refraction_color= new_refraction_color;
+    refraction_color = new_refraction_color;
     refraction_flag = new_refraction_flag;
     IoR = new_IoR;
     IoR_multiplier = new_IoR_multiplier;
@@ -44,21 +41,19 @@ rtMaterial::rtMaterial(
     lModel = new_lModel;
 }
 
-Color3 rtMaterial::computeColor(vertex3f normal, vertex3f position, rayf ray, QVector<rtLight *> availalbleLightList, vertex3f center, Color3 ambientEnvColor) const
-{
+Color3 rtMaterial::computeColor(vertex3f normal, vertex3f position, rayf ray, QVector<rtLight *> availalbleLightList, vertex3f center, Color3 ambientEnvColor) const {
     normal.normalize();
     ray.direction.normalize();
-    Color3 result = ambientEnvColor*ambient_color->getColorAt(position,center);
-    for ( int i = 0; i < availalbleLightList.size(); ++i)
-    {
+    Color3 result = ambientEnvColor * ambient_color->getColorAt(position, center);
+    for (int i = 0; i < availalbleLightList.size(); ++i) {
         Color3 localresult;
         vertex3f direction = availalbleLightList[i]->getPosition() - position;
         direction.normalize();
-        localresult = diffuse_color->getColorAt(position,center)*(qMax(direction*normal,0.0f));
-        vertex3f reflected = ((normal*(direction*normal))*2 - direction)*(-1) ;
+        localresult = diffuse_color->getColorAt(position, center) * (qMax(direction * normal, 0.0f));
+        vertex3f reflected = ((normal * (direction * normal)) * 2 - direction) * (-1);
         reflected.normalize();
-        localresult += specular_color->getColorAt(position,center)*(qPow(-qMax(ray.direction*reflected,0.0f),shininess));
-        localresult = localresult*availalbleLightList[i]->getIntensity();
+        localresult += specular_color->getColorAt(position, center) * (qPow(-qMax(ray.direction * reflected, 0.0f), shininess));
+        localresult = localresult * availalbleLightList[i]->getIntensity();
         result = result + localresult;
     }
     result.clamp();
@@ -66,21 +61,18 @@ Color3 rtMaterial::computeColor(vertex3f normal, vertex3f position, rayf ray, QV
 
 }
 
-Color3 rtMaterial::combineColor(Color3 lightColor, Color3 reflection, Color3 refraction) const
-{
+Color3 rtMaterial::combineColor(Color3 lightColor, Color3 reflection, Color3 refraction) const {
     Color3 result = (lightColor + reflection + refraction);
     result.clamp();
     return result;
 }
 
-vertex3f rtMaterial::remapNormal(vertex3f old_normal) const
-{
+vertex3f rtMaterial::remapNormal(vertex3f old_normal) const {
     if (!bump_flag) return old_normal;
-    return old_normal*bump_multiplier;
+    return old_normal * bump_multiplier;
 }
 
-QDataStream & rtMaterial::toString(QDataStream & result) const
-{
+QDataStream &rtMaterial::toString(QDataStream &result) const {
     result << materialGlobalArrayIndex;
     result << ambient_color->getID();
     result << diffuse_color->getID();

@@ -20,7 +20,23 @@ public:
         NAYAR //!< Не реализовано
     };
 
-    //! Получить номер материала
+    rtTexture *getReflection_color() const {
+        return reflection_color;
+    }
+
+    void setReflection_color(rtTexture *reflection_color) {
+        rtMaterial::reflection_color = reflection_color;
+    }
+
+    rtTexture *getRefraction_color() const {
+        return refraction_color;
+    }
+
+    void setRefraction_color(rtTexture *refraction_color) {
+        rtMaterial::refraction_color = refraction_color;
+    }
+
+//! Получить номер материала
     int getID() const {
         return materialGlobalArrayIndex;
     }
@@ -125,6 +141,40 @@ private:
     static QVector<rtMaterial *> materialGlobalArray;
     //! Индекс в массиве материалов
     int materialGlobalArrayIndex;
+
+
+public:
+    void setIoR(rtTexture *IoR) {
+        rtMaterial::IoR = IoR;
+    }
+
+    bool isReflection_flag() const {
+        return reflection_flag;
+    }
+
+    void setReflection_flag(bool reflection_flag) {
+        rtMaterial::reflection_flag = reflection_flag;
+    }
+
+    bool isRefraction_flag() const {
+        return refraction_flag;
+    }
+
+    void setRefraction_flag(bool refraction_flag) {
+        rtMaterial::refraction_flag = refraction_flag;
+    }
+
+    void setIoR_multiplier(float IoR_multiplier) {
+        rtMaterial::IoR_multiplier = IoR_multiplier;
+    }
+
+    rtTexture *getIoR() const {
+        return IoR;
+    }
+
+    float getIoR_multiplier() const {
+        return IoR_multiplier;
+    }
 };
 
 #endif // RTMATERIAL_H
